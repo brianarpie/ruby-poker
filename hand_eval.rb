@@ -14,19 +14,11 @@ class HandEvaluator
     end
   end
 
-  def define_hand(all)
+  def define_hand(cards)
     max = 0
-    for i in 0..all.length - 1
-      for j in i+1..all.length - 1
-        if all[i] < all[j]
-          sw = all[i]
-          all[i] = all[j]
-          all[j] = sw
-        end
-      end
-    end
-    all.permutation(5).to_a.each { |v|
-      temp = get_value(v[0], v[1], v[2], v[3], v[4])
+    cards.permutation(5).to_a.each { |c|
+      c.sort!{|x, y| y <=> x}
+      temp = get_value(c[0], c[1], c[2], c[3], c[4])
       if temp > max then max = temp end
     }
     max
@@ -38,15 +30,15 @@ class HandEvaluator
     flush = c0 == c1 && c1 == c2 && c2 == c3 && c3 == c4
 
     diff = 0
-    if z0 != z1 then diff+= 1 end
-    if z1 != z2 then diff+= 1 end
-    if z2 != z3 then diff+= 1 end
-    if z4 != z4 then diff+= 1 end
+    if z0 != z1 then diff += 1 end
+    if z1 != z2 then diff += 1 end
+    if z2 != z3 then diff += 1 end
+    if z3 != z4 then diff += 1 end
 
     straight = false
 
     if diff == 4
-      if z4 == z0 - 4
+      if (z4 == z0 - 4) && (z1 == z0 - 1) && (z2 == z1 - 1) && (z3 == z2 - 1)
         straight = true
       elsif z0 == 12 && z1 == 3
         straight = true # A 2 3 4 5
